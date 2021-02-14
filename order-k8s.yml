@@ -1,0 +1,58 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: order
+          image: registry.localtest.com/order:1.1
+          ports:
+            - containerPort: 8182
+      hostAliases:
+      - ip: "20.194.18.209"
+        hostnames:
+        - "account.skcc.co.kr"
+        - "apigateway.skcc.co.kr"
+        - "bff.skcc.co.kr"
+        - "cart.skcc.co.kr"
+        - "order.skcc.co.kr"
+        - "payment.skcc.co.kr"
+        - "product.skcc.co.kr"
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: order-ingress
+spec:
+  rules:
+  - host: order.skcc.co.kr
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: order-svc
+          servicePort: 8182
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-svc
+  labels:
+    app: order
+spec:
+  ports:
+    - port: 8182
+      targetPort: 8182
+      name: order-svc
+  selector:
+    app: order

@@ -1,0 +1,409 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "order API",
+    "version": "1.0",
+    "title": "order",
+    "termsOfService": "urn:tos",
+    "contact": {
+      
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host": "localhost:8182",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "order-controller",
+      "description": "Order Controller"
+    }
+  ],
+  "paths": {
+    "/v1/orders": {
+      "put": {
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "uri": "http://a1001c0e806a748679deb2115e1930bf-0f412fe779c96488.elb.ap-northeast-2.amazonaws.com/v1/orders",
+          "passthroughBehavior": "when_no_match",
+          "connectionType": "VPC_LINK",
+          "connectionId": "vwdm61",
+          "httpMethod": "PUT",
+          "type": "http_proxy"
+        },
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "createOrder",
+        "operationId": "createOrderUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+
+        "parameters": [
+          {
+            "in": "body",
+            "name": "order",
+            "description": "order",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/orders/events": {
+      "get": {
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "uri": "http://a1001c0e806a748679deb2115e1930bf-0f412fe779c96488.elb.ap-northeast-2.amazonaws.com/v1/orders/events",
+          "passthroughBehavior": "when_no_match",
+          "connectionType": "VPC_LINK",
+          "connectionId": "vwdm61",
+          "httpMethod": "GET",
+          "type": "http_proxy"
+        },
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "getOrderEvent",
+        "operationId": "getOrderEventUsingGET",
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderEvent"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/orders/{accountId}": {
+      "get": {
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "uri": "http://a1001c0e806a748679deb2115e1930bf-0f412fe779c96488.elb.ap-northeast-2.amazonaws.com/v1/orders/{accountId}",
+          "passthroughBehavior": "when_no_match",
+          "connectionType": "VPC_LINK",
+          "connectionId": "vwdm61",
+          "httpMethod": "GET",
+          "type": "http_proxy"
+        },
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "findOrderByAccountId",
+        "operationId": "findOrderByAccountIdUsingGET",
+
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "Order": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "accountInfo": {
+          "$ref": "#/definitions/OrderAccount"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "paid": {
+          "type": "string"
+        },
+        "paymentId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "paymentInfo": {
+          "$ref": "#/definitions/OrderPayment"
+        },
+        "productsInfo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderProduct"
+          }
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "Order"
+    },
+    "OrderAccount": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "mobile": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "title": "OrderAccount"
+    },
+    "OrderEvent": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "eventType": {
+          "type": "string",
+          "enum": [
+            "OrderCreated",
+            "OrderCanceled",
+            "OrderPaymentIdSet",
+            "OrderPaid",
+            "OrderCreateFailed",
+            "OrderCancelFailed",
+            "OrderPaymentIdSetFailed",
+            "OrderPayFailed"
+          ]
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "orderId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "payload": {
+          "$ref": "#/definitions/OrderPayload"
+        },
+        "txId": {
+          "type": "string"
+        }
+      },
+      "title": "OrderEvent"
+    },
+    "OrderPayload": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "accountInfo": {
+          "$ref": "#/definitions/OrderAccount"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "paid": {
+          "type": "string"
+        },
+        "paymentId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "paymentInfo": {
+          "$ref": "#/definitions/OrderPayment"
+        },
+        "productsInfo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderProduct"
+          }
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "OrderPayload"
+    },
+    "OrderPayment": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "active": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "orderId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "paid": {
+          "type": "string"
+        },
+        "paymentDetail1": {
+          "type": "string"
+        },
+        "paymentDetail2": {
+          "type": "string"
+        },
+        "paymentDetail3": {
+          "type": "string"
+        },
+        "paymentMethod": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "OrderPayment"
+    },
+    "OrderProduct": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "categoryName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "img": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "originalPrice": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "resultPrice": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "salePercentage": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "salePrice": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "OrderProduct"
+    }
+  }
+}

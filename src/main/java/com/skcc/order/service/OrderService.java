@@ -4,12 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.esotericsoftware.minlog.Log;
 import com.skcc.order.domain.Order;
 import com.skcc.order.domain.OrderPayment;
 import com.skcc.order.event.message.OrderEvent;
@@ -19,6 +13,13 @@ import com.skcc.order.publish.OrderPublish;
 import com.skcc.order.repository.OrderMapper;
 import com.skcc.payment.event.message.PaymentEvent;
 import com.skcc.product.event.message.ProductEvent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -31,6 +32,8 @@ public class OrderService {
 	
 	@Value("${domain.name}")
 	private String domain;
+
+	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 	
 	@Autowired
 	public OrderService(OrderMapper orderMapper, OrderPublish orderPublish) {
@@ -323,7 +326,7 @@ public class OrderService {
 	}
 	
 	public OrderEvent convertOrderToOrderEvent(String txId, long id, OrderEventType orderEventType) {
-		Log.info("in service txId : {}", txId);
+		log.info("in service txId : {}", txId);
 		
 		Order order = this.findOrderById(id);
 		
@@ -336,7 +339,7 @@ public class OrderService {
 		orderEvent.setTxId(txId);
 		orderEvent.setCreatedAt(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 		
-		Log.info("in service orderEvent : {}", orderEvent.toString());
+		log.info("in service orderEvent : {}", orderEvent.toString());
 		
 		return orderEvent;
 	}

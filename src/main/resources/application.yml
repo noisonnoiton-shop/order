@@ -4,8 +4,8 @@ server:
 domain:
   name: order
 
-sequence-nextval: nextval(event_seq)
-order-nextval: nextval(order_seq)
+mybatis:
+  config-location: mybatis-config-h2.xml
 
 spring:
   application:

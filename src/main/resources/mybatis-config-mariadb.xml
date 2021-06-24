@@ -4,6 +4,9 @@
 
 <configuration>
 
-    <properties resource="application.yml"></properties>
+    <properties>
+        <property name="event-nextval" value="nextval(event_seq)" />
+        <property name="order-nextval" value="nextval(order_seq)" />
+    </properties>
 
 </configuration>

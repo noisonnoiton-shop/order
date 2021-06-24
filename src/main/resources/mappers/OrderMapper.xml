@@ -61,7 +61,7 @@
 	</update>
 	
 	<select id="getOrderEventId" resultType="long">
-		select ${sequence-nextval}
+		select ${event-nextval}
 	</select>
 	
 	<select id="getOrderId" resultType="long">

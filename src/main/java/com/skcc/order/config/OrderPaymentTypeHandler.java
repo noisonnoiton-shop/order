@@ -36,13 +36,13 @@ public class OrderPaymentTypeHandler extends BaseTypeHandler<Object>{
 	@Override
 	public OrderPayment getNullableResult(ResultSet rs, String columnName) throws SQLException {
 		
-		Clob d = (Clob) rs.getObject(columnName);
+		String d = (String) rs.getObject(columnName);
 		if(d == null) return null;
 
 		OrderPayment cp = null;
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			cp = objectMapper.readValue(d.getSubString(1, (int) d.length()), OrderPayment.class);
+			cp = objectMapper.readValue(d, OrderPayment.class);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {

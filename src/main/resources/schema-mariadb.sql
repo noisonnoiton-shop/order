@@ -1,5 +1,7 @@
 --sequence
+drop sequence if EXISTS event_seq;
 create sequence event_seq;
+drop sequence if EXISTS order_seq;
 create sequence order_seq;
 
 -- orders

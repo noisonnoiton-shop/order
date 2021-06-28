@@ -250,7 +250,7 @@ public class OrderService {
 		// long orderId = this.orderMapper.getOrderId();
 		// order.setId(orderId);
 		// order.getPaymentInfo().setOrderId(orderId);
-		String seqNextval = "nextval('order_seq')";
+		String seqNextval = "nextval(order_seq)";
 		if(mybatisConfig.contains("h2"))
 		  seqNextval = "order_seq.nextval";
 		long orderId = Long.parseLong(entityManager.createNativeQuery("select " + seqNextval).getSingleResult().toString());

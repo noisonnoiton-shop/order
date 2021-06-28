@@ -1,8 +1,10 @@
 package com.skcc.order.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import com.skcc.order.domain.Order;
 import com.skcc.order.domain.OrderPayment;
@@ -10,7 +12,8 @@ import com.skcc.order.event.message.OrderEvent;
 import com.skcc.order.event.message.OrderEventType;
 import com.skcc.order.event.message.OrderPayload;
 import com.skcc.order.publish.OrderPublish;
-import com.skcc.order.repository.OrderMapper;
+import com.skcc.order.repository.OrderEventRepository;
+import com.skcc.order.repository.OrderRepository;
 import com.skcc.payment.event.message.PaymentEvent;
 import com.skcc.product.event.message.ProductEvent;
 
@@ -21,10 +24,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Getter;
+
 @Service
 public class OrderService {
 	
-	private OrderMapper orderMapper;
+	// @Autowired
+	// private OrderMapper orderMapper;
+
+	private OrderRepository orderRepository;
+	private OrderEventRepository orderEventRepository;
 	private OrderPublish orderPublish;
 	
 	@Autowired
@@ -33,16 +42,25 @@ public class OrderService {
 	@Value("${domain.name}")
 	private String domain;
 
+	@Value("${mybatis.config-location}")
+	String mybatisConfig;
+
+	@Getter
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 	
 	@Autowired
-	public OrderService(OrderMapper orderMapper, OrderPublish orderPublish) {
-		this.orderMapper = orderMapper;
+	public OrderService(OrderRepository orderRepository, OrderEventRepository orderEventRepository, OrderPublish orderPublish) {
+		this.orderRepository = orderRepository;
+		this.orderEventRepository = orderEventRepository;
 		this.orderPublish = orderPublish;
 	}
 	
 	public List<Order> findOrderByAccountId(long accountId) {
-		return this.orderMapper.findOrderByAccountId(accountId);
+		// return this.orderMapper.findOrderByAccountId(accountId);
+		return this.orderRepository.findOrderByAccountId(accountId);
 	}
 	
 	public boolean createOrderAndCreatePublishOrderEvent(Order order) {
@@ -51,6 +69,7 @@ public class OrderService {
 		try {
 			this.orderService.createOrderAndCreatePublishOrderCreatedEvent(order);
 			result = true;
+
 		} catch(Exception e) {
 			try {
 				result = false;
@@ -226,23 +245,33 @@ public class OrderService {
 	}
 
 	public Order createOrder(Order order) throws Exception {
+
 		this.createOrderValidationCheack(order);
-		long orderId = this.orderMapper.getOrderId();
-		order.setId(orderId);
-		order.getPaymentInfo().setOrderId(orderId);
+		// long orderId = this.orderMapper.getOrderId();
+		// order.setId(orderId);
+		// order.getPaymentInfo().setOrderId(orderId);
+		String seqNextval = "nextval('order_seq')";
+		if(mybatisConfig.contains("h2"))
+		  seqNextval = "order_seq.nextval";
+		long orderId = Long.parseLong(entityManager.createNativeQuery("select " + seqNextval).getSingleResult().toString());
+		// long orderId = order.getId();
+		// order.setId(orderId);
+		order.getPaymentInfo().setOrderId(orderId + 1); // generatedValue 로 인한 자동 1 증가 때문에 추가함,,
 		order.setPaid("unpaid");
 		order.setStatus("ordered");
-		this.orderMapper.createOrder(order);
+		// this.orderMapper.createOrder(order);
+		this.orderRepository.save(order);
 		
 		return order;
 	}
 	
 	public void createOrderValidationCheack(Order order) throws Exception{}
 
-	public boolean cancelOrder(Order order) throws Exception {
+	public Order cancelOrder(Order order) throws Exception {
 		this.cancelOrderValidationCheck(order);
 		order.setStatus("canceled");
-		return this.orderMapper.cancelOrder(order.getId());
+		// return this.orderMapper.cancelOrder(order.getId());
+		return this.orderRepository.save(order);
 	}
 	
 	public void cancelOrderValidationCheck(Order order) throws Exception{
@@ -252,18 +281,17 @@ public class OrderService {
 	
 	public void setOrderPaymentId(Order order) throws Exception {
 		this.setOrderPaymentIdValidationCheck(order);
-		this.orderMapper.setOrderPaymentId(order);
+		// this.orderMapper.setOrderPaymentId(order);
+		this.orderRepository.save(order);
 	}
 	
 	public void payOrder(Order order) throws Exception {
 		this.payOrderValidationCheck(order);
-		this.orderMapper.payOrder(order);
+		// this.orderMapper.payOrder(order);
+		this.orderRepository.save(order);
 	}
 	
 	public void payOrderValidationCheck(Order order) throws Exception {
-		//test용
-//		throw new Exception();
-		
 		if(!"paid".equals(order.getPaid()))
 			throw new Exception();
 	}
@@ -308,7 +336,8 @@ public class OrderService {
 	}
 	
 	public List<OrderEvent> getOrderEvent(){
-		return this.orderMapper.getOrderEvent();
+		// return this.orderMapper.getOrderEvent();
+		return this.orderEventRepository.findAll();
 	}
 	
 	public void CreatePublishOrderEvent(String txId, Order order, OrderEventType orderEventType) {
@@ -322,22 +351,23 @@ public class OrderService {
 	}
 	
 	public void createOrderEvent(OrderEvent orderEvent) {
-		this.orderMapper.createOrderEvent(orderEvent);
+		// this.orderMapper.createOrderEvent(orderEvent);
+		this.orderEventRepository.save(orderEvent);
 	}
 	
 	public OrderEvent convertOrderToOrderEvent(String txId, long id, OrderEventType orderEventType) {
 		log.info("in service txId : {}", txId);
-		
+
 		Order order = this.findOrderById(id);
-		
+
 		OrderEvent orderEvent = new OrderEvent();
-		orderEvent.setId(this.getOrderEventId());
+		// orderEvent.setId(this.orderMapper.getOrderEventId());
 		orderEvent.setDomain(domain);
-		orderEvent.setOrderId(order.getId());
+		orderEvent.setOrderId(id);
 		orderEvent.setEventType(orderEventType);
 		orderEvent.setPayload(new OrderPayload(order.getId(), order.getAccountId(), order.getPaymentId(), order.getAccountInfo(), order.getPaymentInfo(), order.getProductsInfo(), order.getPaid(), order.getStatus()));
 		orderEvent.setTxId(txId);
-		orderEvent.setCreatedAt(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+		orderEvent.setCreatedAt(LocalDateTime.now());
 		
 		log.info("in service orderEvent : {}", orderEvent.toString());
 		
@@ -359,16 +389,14 @@ public class OrderService {
 		return order;
 	}
 	
-	public long getOrderEventId() {
-		return this.orderMapper.getOrderEventId();
-	}
-	
 	public Order findOrderById(long id) {
-		return this.orderMapper.findOrderById(id);
+		// return this.orderMapper.findOrderById(id);
+		return this.orderRepository.findById(id);
 	}
 	
 	public OrderEvent findOrderEventByTxId(String txId, String eventType) {
-		return this.orderMapper.findOrderEventByTxId(txId, eventType);
+		// return this.orderMapper.findOrderEventByTxId(txId, eventType);
+		return this.orderEventRepository.findOrderEventByTxIdAndEventType(txId, eventType);
 	}
 	
 }

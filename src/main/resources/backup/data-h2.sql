@@ -8,7 +8,7 @@ select event_seq.nextval;
 select order_seq.nextval;
 
 INSERT INTO orders 
-(id, account_id, payment_id, account_info, products_info, payment_info, paid, status, created_at)
+(id, accountId, paymentId, accountInfo, productsInfo, paymentInfo, paid, status, createdAt)
 VALUES
 (1, 1, 1 
 , '{
@@ -37,8 +37,8 @@ VALUES
 , 'completed'
 , NOW());
   
-INSERT INTO order_event
-(id,domain,order_id, event_type, payload, tx_id, created_at)
+INSERT INTO order_events 
+(id,domain,orderId, eventType, payload, txId, createdAt)
 VALUES
 (1,'order',1, 'OrderCreated'
 , '{

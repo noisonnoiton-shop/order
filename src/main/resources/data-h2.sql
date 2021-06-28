@@ -38,7 +38,7 @@ VALUES
 , NOW());
   
 INSERT INTO order_event
-(id,domain,order_id, event_type, payload, tx_id, created_at)
+(id, domain, order_id, event_type, payload, tx_id, created_at)
 VALUES
 (1,'order',1, 'OrderCreated'
 , '{

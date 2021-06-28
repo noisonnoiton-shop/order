@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Orders")
-@SequenceGenerator(name = "order_seq_gen", sequenceName = "order_seq", allocationSize = 0, initialValue = 1)
+@SequenceGenerator(name = "order_seq_gen", sequenceName = "order_seq", allocationSize = 1, initialValue = 1)
 public class Order {
 	
 	@GeneratedValue(strategy=GenerationType.TABLE, generator="order_seq_gen")

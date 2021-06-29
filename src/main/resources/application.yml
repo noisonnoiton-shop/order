@@ -80,15 +80,15 @@ spring:
           paymentCreateFailed:
             consumer:
               autoBindDlq: true
-              bindingRoutingKey: payment.paymentCreateFailed.#
+              bindingRoutingKey: payment.PaymentCreateFailed.#
           paymentPaid:
             consumer:
               autoBindDlq: true
-              bindingRoutingKey: payment.paymentPaid.#
+              bindingRoutingKey: payment.PaymentPaid.#
           paymentCreated:
             consumer:
               autoBindDlq: true
-              bindingRoutingKey: product.paymentCreated.#
+              bindingRoutingKey: payment.PaymentCreated.#
           OrderOutput:
             producer:
               autoBindDlq: true

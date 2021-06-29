@@ -5,38 +5,38 @@ domain:
   name: order
 
 mybatis:
-  config-location: mybatis-config-h2.xml
+  config-location: mybatis-config-mariadb.xml
 
 spring:
   application:
     name: awesome-order-service
 
-  jpa:
-    hibernate.ddl-auto: create
-    show-sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
-  datasource:
-    platform: h2
-    url: jdbc:h2:mem:testdb;MODE=MYSQL;
-    username: sa
-    password: null
-    driver-class-name: org.h2.Driver
-    initialization-mode: always
-  h2:
-    console:
-      enabled: true
   # jpa:
   #   hibernate.ddl-auto: create
   #   show-sql: true
-  #   database-platform: org.hibernate.dialect.MariaDB103Dialect
+  #   database-platform: org.hibernate.dialect.H2Dialect
   # datasource:
-  #   driver-class-name: org.mariadb.jdbc.Driver
-  #   url: jdbc:mariadb://localhost:3300/orders?characterEncoding=UTF-8
-  #   username: root
-  #   password: skcc
-  #   platform: mariadb
+  #   platform: h2
+  #   url: jdbc:h2:mem:testdb;MODE=MYSQL;
+  #   username: sa
+  #   password: null
+  #   driver-class-name: org.h2.Driver
   #   initialization-mode: always
-  #   continue-on-error: true
+  # h2:
+  #   console:
+  #     enabled: true
+  jpa:
+    hibernate.ddl-auto: create
+    show-sql: true
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3300/orders?characterEncoding=UTF-8
+    username: root
+    password: skcc
+    platform: mariadb
+    initialization-mode: always
+    continue-on-error: true
 
   cloud:
     stream:

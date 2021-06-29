@@ -191,8 +191,6 @@ public class OrderService {
 	// @Transactional
 	public Order createOrderAndCreatePublishOrderCreatedEvent(Order order) throws Exception{
 		Order resultOrder = this.createOrder(order);
-		log.info("resultOrder === " + resultOrder.toString());
-		log.info("getId === " + resultOrder.getId());
 		this.CreatePublishOrderEvent(null, resultOrder, OrderEventType.OrderCreated);
 		return resultOrder;
 	}

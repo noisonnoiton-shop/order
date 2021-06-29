@@ -56,6 +56,18 @@ spring:
           destination: productExchange
           group: order.productAmountSubtractFailed
           content-type: application/json
+        paymentCreateFailed:
+          destination: paymentExchange
+          group: order.paymentCreateFailed
+          content-type: application/json
+        paymentPaid:
+          destination: paymentExchange
+          group: order.paymentPaid
+          content-type: application/json
+        paymentCreated:
+          destination: paymentExchange
+          group: order.paymentCreated
+          content-type: application/json
         OrderOutput:
           destination: orderExchange
           content-type: application/json
@@ -65,6 +77,18 @@ spring:
             consumer:
               autoBindDlq: true
               bindingRoutingKey: product.ProductAmountSubtractFailed.#
+          paymentCreateFailed:
+            consumer:
+              autoBindDlq: true
+              bindingRoutingKey: payment.paymentCreateFailed.#
+          paymentPaid:
+            consumer:
+              autoBindDlq: true
+              bindingRoutingKey: payment.paymentPaid.#
+          paymentCreated:
+            consumer:
+              autoBindDlq: true
+              bindingRoutingKey: product.paymentCreated.#
           OrderOutput:
             producer:
               autoBindDlq: true

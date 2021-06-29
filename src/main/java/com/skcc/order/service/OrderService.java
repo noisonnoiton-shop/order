@@ -257,7 +257,7 @@ public class OrderService {
 		  seqNextval = "order_seq.nextval";
 		long orderId = Long.parseLong(entityManager.createNativeQuery("select " + seqNextval).getSingleResult().toString());
 		// long orderId = order.getId();
-		// order.setId(orderId);
+		order.setId(orderId + 1);
 		order.getPaymentInfo().setOrderId(orderId + 1); // generatedValue 로 인한 자동 1 증가 때문에 추가함,,
 		order.setPaid("unpaid");
 		order.setStatus("ordered");

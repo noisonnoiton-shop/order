@@ -341,7 +341,6 @@ public class OrderService {
 	}
 	
 	public void CreatePublishOrderEvent(String txId, Order order, OrderEventType orderEventType) {
-		log.info("order.getId() ==== " + order.getId());
 		OrderEvent orderEvent = this.orderService.convertOrderToOrderEvent(txId, order.getId(), orderEventType);
 		this.createOrderEvent(orderEvent);
 		this.publishOrderEvent(orderEvent);

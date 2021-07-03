@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.skcc.order.domain.Order;
 import com.skcc.order.domain.OrderPayment;
 import com.skcc.order.event.message.OrderEvent;
@@ -27,10 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.Getter;
 
 @Service
+@XRayEnabled
 public class OrderService {
-	
-	// @Autowired
-	// private OrderMapper orderMapper;
 
 	private OrderRepository orderRepository;
 	private OrderEventRepository orderEventRepository;

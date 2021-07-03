@@ -2,6 +2,7 @@ package com.skcc.order.controller;
 
 import java.util.List;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.skcc.order.domain.Order;
 import com.skcc.order.event.message.OrderEvent;
 import com.skcc.order.service.OrderService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@XRayEnabled
 @RequestMapping("/v1")
 public class OrderController {
 	

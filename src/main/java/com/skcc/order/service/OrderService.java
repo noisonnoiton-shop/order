@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.Getter;
 
 @Service
-@XRayEnabled
+// @XRayEnabled
 public class OrderService {
 
 	private OrderRepository orderRepository;

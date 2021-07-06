@@ -11,7 +11,7 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
-@XRayEnabled
+// @XRayEnabled
 @EnableBinding(OrderOutputChannel.class)
 public class OrderPublish {
 	

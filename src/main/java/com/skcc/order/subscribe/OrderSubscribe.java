@@ -12,7 +12,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@XRayEnabled
+// @XRayEnabled
 @EnableBinding(OrderInputChannel.class)
 public class OrderSubscribe {
 

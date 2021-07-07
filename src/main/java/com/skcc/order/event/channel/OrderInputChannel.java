@@ -10,16 +10,16 @@ public interface OrderInputChannel {
 	String paymentCreated = "paymentCreated";
 	String paymentPaid = "paymentPaid";
 	
-	@Input(OrderInputChannel.productAmountSubtractFailed)
+	// @Input(OrderInputChannel.productAmountSubtractFailed)
 	SubscribableChannel productAmountSubtractFailed();
 	
-	@Input(OrderInputChannel.paymentCreateFailed)
+	// @Input(OrderInputChannel.paymentCreateFailed)
 	SubscribableChannel paymentCreateFailed();
 	
-	@Input(OrderInputChannel.paymentPaid)
+	// @Input(OrderInputChannel.paymentPaid)
 	SubscribableChannel paymentPaid();
 	
-	@Input(OrderInputChannel.paymentCreated)
+	// @Input(OrderInputChannel.paymentCreated)
 	SubscribableChannel paymentCreated();
 	
 }

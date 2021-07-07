@@ -10,9 +10,8 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
-@Component
-// @XRayEnabled
-@EnableBinding(OrderOutputChannel.class)
+// @Component
+// @EnableBinding(OrderOutputChannel.class)
 public class OrderPublish {
 	
 	private OrderOutputChannel orderOutputChannel;

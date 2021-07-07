@@ -6,6 +6,6 @@ import org.springframework.messaging.MessageChannel;
 public interface OrderOutputChannel {
 	String OrderOutput = "OrderOutput";
 	
-	@Output(OrderOutputChannel.OrderOutput)
+	// @Output(OrderOutputChannel.OrderOutput)
 	MessageChannel getMessageChannel();
 }

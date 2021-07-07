@@ -6,13 +6,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.skcc.order.domain.Order;
 import com.skcc.order.domain.OrderPayment;
 import com.skcc.order.event.message.OrderEvent;
 import com.skcc.order.event.message.OrderEventType;
 import com.skcc.order.event.message.OrderPayload;
-import com.skcc.order.publish.OrderPublish;
+import com.skcc.order.producer.OrderProducer;
 import com.skcc.order.repository.OrderEventRepository;
 import com.skcc.order.repository.OrderRepository;
 import com.skcc.payment.event.message.PaymentEvent;
@@ -33,10 +32,12 @@ public class OrderService {
 
 	private OrderRepository orderRepository;
 	private OrderEventRepository orderEventRepository;
-	private OrderPublish orderPublish;
 	
 	@Autowired
 	private OrderService orderService;
+
+	@Autowired
+	private OrderProducer orderProducer;
 	
 	@Value("${domain.name}")
 	private String domain;
@@ -51,10 +52,9 @@ public class OrderService {
 	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 	
 	@Autowired
-	public OrderService(OrderRepository orderRepository, OrderEventRepository orderEventRepository, OrderPublish orderPublish) {
+	public OrderService(OrderRepository orderRepository, OrderEventRepository orderEventRepository) {
 		this.orderRepository = orderRepository;
 		this.orderEventRepository = orderEventRepository;
-		this.orderPublish = orderPublish;
 	}
 	
 	public List<Order> findOrderByAccountId(long accountId) {
@@ -346,7 +346,8 @@ public class OrderService {
 	}
 	
 	public void publishOrderEvent(OrderEvent orderEvent) {
-		this.orderPublish.send(orderEvent);
+		// this.orderPublish.send(orderEvent);
+		this.orderProducer.send(orderEvent);
 	}
 	
 	public void createOrderEvent(OrderEvent orderEvent) {

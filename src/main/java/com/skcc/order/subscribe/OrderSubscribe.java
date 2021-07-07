@@ -11,9 +11,8 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.stereotype.Component;
 
-@Component
-// @XRayEnabled
-@EnableBinding(OrderInputChannel.class)
+// @Component
+// @EnableBinding(OrderInputChannel.class)
 public class OrderSubscribe {
 
 	private OrderService orderService;
@@ -23,23 +22,23 @@ public class OrderSubscribe {
 		this.orderService = orderService;
 	}
 	
-	@StreamListener(OrderInputChannel.productAmountSubtractFailed)
+	// @StreamListener(OrderInputChannel.productAmountSubtractFailed)
 	public void receiveProductAmountSubtractFailedEvent(ProductEvent productEvent) {
 		this.orderService.cancelOrderAndCreatePublishOrderEvent(productEvent);
 	}
 	
-	@StreamListener(OrderInputChannel.paymentCreateFailed)
+	// @StreamListener(OrderInputChannel.paymentCreateFailed)
 	public void receivePaymentCreateFailedEvent(PaymentEvent paymentEvent) {
 		this.orderService.cancelOrderAndCreatePublishOrderEvent(paymentEvent);
 	}
 
-	@StreamListener(OrderInputChannel.paymentPaid)
+	// @StreamListener(OrderInputChannel.paymentPaid)
 	public void receivePaymentPaidEvent(PaymentEvent paymentEvent) {
 //		throw new Exception();
 		this.orderService.payOrderAndCreatePublishOrderEvent(paymentEvent);
 	}
 	
-	@StreamListener(OrderInputChannel.paymentCreated)
+	// @StreamListener(OrderInputChannel.paymentCreated)
 	public void receivePaymentCreatedEvent(PaymentEvent paymentEvent) {
 		this.orderService.setOrderPaymentIdAndCreatePublishOrderEvent(paymentEvent);
 	}

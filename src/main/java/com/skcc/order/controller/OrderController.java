@@ -2,15 +2,17 @@ package com.skcc.order.controller;
 
 import java.util.List;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.skcc.order.domain.Order;
 import com.skcc.order.event.message.OrderEvent;
 import com.skcc.order.service.OrderService;
+import com.skcc.payment.event.message.PaymentEvent;
+import com.skcc.product.event.message.ProductEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,26 @@ public class OrderController {
 	@DeleteMapping(value="/orders/{id}") 
 	public boolean cancelOrder(@PathVariable long id) {
 		return this.orderService.cancelOrderAndCreatePublishOrderEvent(id);
+	}
+
+	@PostMapping(value="/orders/product/cancel")
+	public boolean receiveProductAmountSubtractFailedEvent(@RequestBody ProductEvent productEvent) {
+		return this.orderService.cancelOrderAndCreatePublishOrderEvent(productEvent);
+	}
+
+	@PostMapping(value="/orders/payment/cancel")
+	public boolean receivePaymentCreateFailedEvent(@RequestBody PaymentEvent paymentEvent) {
+		return this.orderService.cancelOrderAndCreatePublishOrderEvent(paymentEvent);
+	}
+
+	@PostMapping(value="/orders/payment/paid")
+	public boolean receivePaymentPaidEvent(@RequestBody PaymentEvent paymentEvent) {
+		return this.orderService.payOrderAndCreatePublishOrderEvent(paymentEvent);
+	}
+
+	@PostMapping(value="/orders/payment")
+	public boolean receivePaymentCreatedEvent(@RequestBody PaymentEvent paymentEvent) {
+		return this.orderService.setOrderPaymentIdAndCreatePublishOrderEvent(paymentEvent);
 	}
 	
 }

@@ -1,6 +1,6 @@
 package com.skcc.order.publish;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
+// import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.skcc.order.event.channel.OrderOutputChannel;
 import com.skcc.order.event.message.OrderEvent;
 
